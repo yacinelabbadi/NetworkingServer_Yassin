@@ -60,7 +60,7 @@ public class NetworkingServer {
                     break;
                 }
             } catch (IOException ie) {
-                System.out.println("Something went wrong");
+                System.out.println("I/O error " + ie);
             }
         }
     }
