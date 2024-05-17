@@ -26,7 +26,42 @@ public class NetworkingServer {
 
         // Wait for the data from the client and reply
         while (true) {
+            try {
 
+                // Listens for a connection to be made to
+                // this socket and accepts it. The method blocks until
+                // a connection is made
+                System.out.println("Waiting for a request...");
+                client = server.accept();
+
+                System.out.println("Connect request is accepted...");
+                String clienthost = client.getInetAddress().getHostAddress();
+                int clientPort = client.getPort();
+                System.out.println("Client host = " + clienthost + "\nClient port = " + clientPort);
+
+                // Read data from client
+                InputStream clientIn = client.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(clientIn));
+                String msgFromClient = br.readLine();
+                System.out.println("Message recieved from client = " + msgFromClient);
+
+                // Send response to the client
+                if (msgFromClient != null && !msgFromClient.equalsIgnoreCase("bye")) {
+                    OutputStream clientOut = client.getOutputStream();
+                    PrintWriter pw = new PrintWriter(clientOut, true);
+                    String ansMsg = "Hello, " + msgFromClient;
+                    pw.println(ansMsg);
+                }
+
+                // Close sockets
+                if (msgFromClient != null && msgFromClient.equalsIgnoreCase("bye")) {
+                    server.close();
+                    client.close();
+                    break;
+                }
+            } catch (IOException ie) {
+                // Error
+            }
         }
     }
 }
